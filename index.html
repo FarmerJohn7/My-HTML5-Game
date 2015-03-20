@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+  
+    <meta charset='utf-8'/>
+    
+    <title>My HTML5</title>
+  
+    <script type='text/javascript' src='phaser.js'></script>
+
+  </head>
+
+  <body>
+    
+    <script type='text/javascript'>
+    
+    var game = new Phaser.Game(500,500, Phaser.AUTO, '', {preload: preload, create: create, update: update}, false, false);
+    
+    function preload()
+    {
+    
+      game.load.image('stage', 'assets/stage.png');
+      game.load.spritesheet('character1', 'assets/character1.png', 32, 48);
+      
+    }
+      
+      var platforms;
+      var player;
+      var cursors;
+    
+    function create()
+    {
+    
+      game.physics.startSystem(Phaser.Physics.ARCADE);
+      
+      game.add.sprite(0, 0, 'stage');
+      
+      platforms=game.add.group();
+      platforms.enableBody=true;
+      
+      var ground=platforms.create(0, 450);
+      ground.body.immovable=true;
+      ground.scale.setTo(50,0);
+      
+      var ledge=platforms.create(0, 330);
+      ledge.body.immovable=true;
+      ledge.scale.setTo(6,0);
+      
+      var ledge=platforms.create(310, 230);
+      ledge.body.immovable=true;
+      ledge.scale.setTo(6,0);
+      
+      var ledge=platforms.create(0,130);
+      ledge.body.immovable=true;
+      ledge.scale.setTo(6,0);
+      
+      player=game.add.sprite(250, 100, 'character1');
+      
+      game.physics.arcade.enable(player);
+      
+   	player.body.gravity.y = 450;
+   	player.body.collideWorldBounds = true;
+      
+      player.animations.add('left', [0, 1, 2, 3], 10, true);
+   	player.animations.add('right', [5, 6, 7, 8], 10, true);
+      
+      cursors = game.input.keyboard.createCursorKeys();
+      
+    }
+    
+    function update()
+    {
+      
+      game.physics.arcade.collide(player, platforms);
+      
+      player.body.velocity.x = 0;
+
+  		if (cursors.left.isDown)
+      {
+        player.body.velocity.x = -150;
+
+        player.animations.play('left');
+    	}
+    	else if (cursors.right.isDown)
+   	{
+        player.body.velocity.x = 150;
+
+        player.animations.play('right');
+    	}
+    	else
+    	{
+        player.animations.stop();
+
+        player.frame = 4;
+    	}
+      
+    	if (cursors.up.isDown && player.body.touching.down)
+    	{
+        player.body.velocity.y = -350;
+    	}
+    
+    }
+    
+    
+    </script>
+
+
+  </body>
+
+</html>
